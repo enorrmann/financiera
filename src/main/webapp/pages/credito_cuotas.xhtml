@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jstl/core"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+<f:view>
+<p:panel header="Cuotas">
+<p:dataTable
+paginatorPosition="bottom"
+id="cuotaList" value="#{creditoBean.credito.cuotas}" var="cuota"
+resizableColumns="false" paginator="true" currentPageReportTemplate=" {currentPage} de {totalPages}" paginatorTemplate=" {CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rows="10">
+          <p:column>
+	        <f:facet name="header">
+	          <h:outputText value="Numero" />
+	        </f:facet>
+	        <h:outputText value="#{cuota.numero}"/>
+          </p:column>
+          <p:column>
+	        <f:facet name="header">
+	          <h:outputText value="Vencimiento" />
+	        </f:facet>
+	        <h:outputText value="#{cuota.fechaVencimiento}">
+	        	<f:convertDateTime pattern="dd/MM/yyyy" />
+	        </h:outputText>
+          </p:column>
+          <p:column>
+	        <f:facet name="header">
+	          <h:outputText value="Ultimo Pago" />
+	        </f:facet>
+	        <h:outputText value="#{cuota.ultimaFechaPago}">
+	        	<f:convertDateTime pattern="dd/MM/yyyy" />
+	        </h:outputText>
+          </p:column>
+          <p:column>
+	        <f:facet name="header">
+	          <h:outputText value="Importe" />
+	        </f:facet>
+	        <h:outputText value="#{cuota.importe}"/>
+          </p:column>
+          <p:column>
+	        <f:facet name="header">
+	          <h:outputText value="Pagado" />
+	        </f:facet>
+	        <h:outputText value="#{cuota.totalPagado}"/>
+          </p:column>
+          <p:column>
+	        <f:facet name="header">
+	          <h:outputText value="Interes" />
+	        </f:facet>
+	        <h:outputText value="#{cuota.intereses}"/>
+          </p:column>
+
+          <p:column>
+	        <f:facet name="header">
+	          <h:outputText value="Estado" />
+	        </f:facet>
+	        <h:outputText value="Pagada" rendered="#{cuota.pagada==1}"/>
+          </p:column>
+          <p:column>
+	        <f:facet name="header">
+	          <h:outputText value="Saldo" />
+	        </f:facet>
+	        <h:outputText value="#{cuota.saldo}"/>
+          </p:column>
+       </p:dataTable>   
+
+</p:panel>
+</f:view>
+
+</html>

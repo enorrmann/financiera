@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jstl/core"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../templates/layout.xhtml">
+  <ui:define name="content">
+	
+	<h:form prependId="false" id="filtroForm">
+		<ui:include src="filtro_cuotas.xhtml"/>
+	</h:form>
+
+    <h:form prependId="false" id="growlForm">
+      <p:growl id="growl" showDetail="false" />
+    </h:form>
+    <h:form prependId="false" id="dataForm">
+      <p:panel id="data">
+        <f:facet name="header">
+          <h:outputText value="#{cuotaBean.name}" />
+        </f:facet>
+        <h:outputFormat id="noRecordsFound" value="#{messages.label_no_records_found}" rendered="#{!cuotaBean.dataVisible}">
+          <f:param value="Cuotas" />
+        </h:outputFormat>
+        <p:dataTable
+        filterEvent="enter"
+        paginatorPosition="bottom"
+        id="list" value="#{cuotaBean.allCuotas}" var="cuota" rendered="#{cuotaBean.dataVisible}"  resizableColumns="false" paginator="true" currentPageReportTemplate=" {currentPage} de {totalPages}" paginatorTemplate=" {CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rows="15"
+        sortBy="#{cuota.credito.cliente.nombreLargo}"
+        >
+        <f:facet name="header">
+        
+		<table>
+        <tr>
+        <td align="left">
+		
+        
+        <h:outputText value="Importes calculados al " rendered="#{cuotaBean.tipoListado=='VENCIMIENTOS'}"/>
+        <h:outputText value="#{cuotaBean.filtroCuotaList.fechaHasta}" rendered="#{cuotaBean.tipoListado=='VENCIMIENTOS'}">
+        	<f:convertDateTime pattern="dd/MM/yyyy" />
+        </h:outputText>
+        
+  		</td>
+		<td align="right">
+		<p:commandButton value="Imprimir lista" ajax="false" icon="ui-icon-print">
+			 <p:dataExporter type="pdf" target="list" fileName="cuotas" excludeColumns="9"/>
+		</p:commandButton>
+		<p:commandButton
+			rendered="#{not empty cuotaBean.ultimoPago}" 
+			value="Imprimir recibo" id="printUltimoPagoGeneral" action="#{cuotaBean.printUltimoPagoGeneral}" icon="ui-icon-print" ajax="false" title="Imprimir recibo de ultima cuota pagada">
+			</p:commandButton>
+		<p:tooltip
+			rendered="#{not empty cuotaBean.ultimoPago}"
+			for="printUltimoPagoGeneral" value="Imprimir recibo de ultima cuota pagada" showEffect="fade" hideEffect="fade" />
+	
+		</td>
+		</tr>
+		</table>
+
+        
+        </f:facet>
+          <p:column>
+	        <f:facet name="header">
+	          <h:outputText value="Numero" />
+	        </f:facet>
+	        <h:outputText value="#{cuota.numero}"/>
+          </p:column>
+          <p:column>
+	        <f:facet name="header">
+	          <h:outputText value="Vencimiento" />
+	        </f:facet>
+	        <h:outputText value="#{cuota.fechaVencimiento}">
+	        	<f:convertDateTime pattern="dd/MM/yyyy" />
+	        </h:outputText>
+          </p:column>
+          <p:column>
+	        <f:facet name="header">
+	          <h:outputText value="Ultimo Pago" />
+	        </f:facet>
+	        <h:outputText value="#{cuota.ultimaFechaPago}">
+	        	<f:convertDateTime pattern="dd/MM/yyyy" />
+	        </h:outputText>
+          </p:column>
+          <p:column>
+	        <f:facet name="header">
+	          <h:outputText value="Cliente" />
+	        </f:facet>
+	        <h:outputText value="#{cuota.credito.cliente.nombreLargo}"/>
+          </p:column>
+          <p:column>
+	        <f:facet name="header">
+	          <h:outputText value="Direccion" />
+	        </f:facet>
+	        <h:outputText value="#{cuota.credito.cliente.domicilioComercial}"/>
+          </p:column>
+          <p:column>
+	        <f:facet name="header">
+	          <h:outputText value="Zona" />
+	        </f:facet>
+	        <h:outputText value="#{cuota.credito.cliente.zona.zona}"/>
+          </p:column>
+          <p:column>
+	        <f:facet name="header">
+	          <h:outputText value="Importe" />
+	        </f:facet>
+	        <h:outputText value="#{cuota.importe}"/>
+          </p:column>
+          <p:column>
+	        <f:facet name="header">
+	          <h:outputText value="Interes" />
+	        </f:facet>
+	        <h:outputText value="#{cuota.intereses}"/>
+          </p:column>
+
+          <p:column>
+	        <f:facet name="header">
+	          <h:outputText value="Saldo" />
+	        </f:facet>
+	        <h:outputText value="#{cuota.saldo}"/>
+          </p:column>
+
+          <p:column styleClass="action-column">
+            <f:facet name="header">
+              <h:outputText value="Acciones" />
+            </f:facet>
+            <p:commandButton id="viewButton" icon="ui-icon-zoomin" update=":viewForm" oncomplete="viewDialog.show()" title="#{messages.label_view}">
+              <f:setPropertyActionListener value="#{cuota}" target="#{cuotaBean.cuota}" />
+            </p:commandButton>
+            <p:tooltip for="viewButton" value="#{messages.label_view}" showEffect="fade" hideEffect="fade" />
+            <p:commandButton id="editButton" value="$" update=":editForm:editPanelGrid" action="#{cuotaBean.onEdit}" oncomplete="editDialog.show()" title="Pagar" rendered="false">
+              <f:setPropertyActionListener value="#{cuota}" target="#{cuotaBean.cuota}" />
+            </p:commandButton>
+            <p:tooltip for="editButton" value="Pagar" showEffect="fade" hideEffect="fade" />
+            
+            <p:commandButton           
+            id="nuevoPagoBtn"
+            value="$P"
+			update=":editForm:editPanelGrid" action="#{pagoBean.doNuevoPago}" oncomplete="createDialog.show()" title="Pagar"
+			rendered="#{cuotaBean.tipoListado=='VENCIMIENTOS'}"
+			>
+              <f:setPropertyActionListener value="#{cuota}" target="#{pagoBean.cuota}" />
+            </p:commandButton>
+            <p:tooltip for="nuevoPagoBtn" value="Pago parcial" showEffect="fade" hideEffect="fade" />
+          
+          <p:commandButton
+          rendered="#{cuotaBean.tipoListado=='VENCIMIENTOS'}"
+          action="#{cuotaBean.initPagarTotalCuota}"
+          	id="viewPagoTotalButton" value="$T" oncomplete="confirmPagoDialog.show()" update=":confirmPagoDialog">
+				<f:setPropertyActionListener value="#{cuota}" target="#{pagoBean.cuota}" />
+				<f:setPropertyActionListener value="#{cuota}" target="#{cuotaBean.cuota}" />
+          </p:commandButton>
+            <p:tooltip for="viewPagoTotalButton" value="Pago total" showEffect="fade" hideEffect="fade" />
+          
+          
+			<p:commandButton id="printButton" action="#{cuotaBean.printUltimoPagoCuota}" icon="ui-icon-print" ajax="false" title="Imprimir recibo de ultima cuota pagada">
+				<f:setPropertyActionListener value="#{cuota}" target="#{cuotaBean.cuota}" />
+			</p:commandButton>
+			<p:tooltip for="printButton" value="Imprimir recibo del ultimo pago" showEffect="fade" hideEffect="fade" />
+
+
+
+          </p:column>
+			<p:summaryRow>
+				<p:column colspan="7" style="text-align:right">
+					Total:
+				</p:column>
+				<p:column>
+					#{cuotaBean.saldoMap[cuota.credito.cliente]}
+				</p:column>
+				<p:column>
+				</p:column>
+			</p:summaryRow>
+        </p:dataTable>
+      </p:panel>
+    </h:form>
+    <p:dialog id="editDialog" header="Pagar Cuota" modal="true" widgetVar="editDialog" dynamic="true" resizable="true" maximizable="true" showEffect="fade" hideEffect="explode">
+      <p:ajax event="close" update=":dataForm:data" listener="#{cuotaBean.handleDialogClose}" />
+      <p:outputPanel id="editPanel">
+        <h:form id="editForm" enctype="multipart/form-data">
+          <h:panelGrid id="editPanelGrid" columns="3" binding="#{cuotaBean.editPanelGrid}" styleClass="dialog" columnClasses="col1,col2,col3" />
+          <p:commandButton id="editSaveButton" value="#{messages.label_save}" action="#{cuotaBean.persist}" update="editPanelGrid :growlForm:growl" />
+          <p:commandButton id="editCloseButton" value="#{messages.label_close}" onclick="editDialog.hide()" type="button" />
+        </h:form>
+      </p:outputPanel>
+    </p:dialog>
+    <p:dialog id="viewDialog" header="#{messages.label_view} Cuota" modal="true" widgetVar="viewDialog" dynamic="true" resizable="true" maximizable="true" showEffect="fade" hideEffect="explode">
+      <p:outputPanel id="viewPanel">
+        <h:form id="viewForm" enctype="multipart/form-data">
+          
+         <h:panelGrid id="viewPanelGrid" columns="2" styleClass="dialog" columnClasses="col1,col2" >
+          <h:outputText value="Numero:"/><h:outputText value="#{cuotaBean.cuota.numero}"/>
+          <h:outputText value="Fecha de Vencimiento:"/><h:outputText value="#{cuotaBean.cuota.fechaVencimiento}"><f:convertDateTime pattern="dd/MM/yyyy" /></h:outputText>
+          <h:outputText value="Importe:"/><h:outputText value="#{cuotaBean.cuota.importe}"/>
+          <h:outputText value="Saldo:"/><h:outputText value="#{cuotaBean.cuota.saldo}"/>
+          </h:panelGrid>
+          <p:dataTable id="dtPagos" value="#{cuotaBean.cuota.pagos}" var="pago" emptyMessage="No registra pagos">
+          <f:facet name="header">Pagos</f:facet>
+	          <p:column><f:facet name="header">Fecha de pago</f:facet>
+	          	        <h:outputText value="#{pago.fechaPago}">
+	        			<f:convertDateTime pattern="dd/MM/yyyy" />
+	        </h:outputText>
+	          
+	          </p:column>
+	          <p:column><f:facet name="header">Importe</f:facet><f:facet name="footer">#{cuotaBean.cuota.totalPagado}</f:facet>#{pago.importe}</p:column>
+	          <p:column><f:facet name="header">Cobrador</f:facet>#{pago.cobrador.nombreCompleto}</p:column>
+          </p:dataTable>
+          <p:commandButton id="viewCloseButton" value="#{messages.label_close}" onclick="viewDialog.hide()" type="button" />
+        </h:form>
+      </p:outputPanel>
+    </p:dialog>
+    <p:confirmDialog id="deleteDialog" widgetVar="deleteDialog" message="#{messages.label_delete_record}" showEffect="fade" hideEffect="explode" header="#{messages.label_confirm_deletion}" severity="alarm">
+      <p:outputPanel id="deletePanel">
+        <h:form id="deleteForm">
+          <p:commandButton id="deleteYesButton" value="#{messages.label_yes}" action="#{cuotaBean.delete}" update=":dataForm:data :growlForm:growl" oncomplete="deleteDialog.hide()" />
+          <p:commandButton id="deleteNoButton" value="#{messages.label_no}" onclick="deleteDialog.hide()" type="button" />
+        </h:form>
+      </p:outputPanel>
+    </p:confirmDialog>
+
+    <p:confirmDialog id="confirmPagoDialog" widgetVar="confirmPagoDialog" showEffect="fade" hideEffect="explode" header="Confirme" severity="alarm">
+    <f:facet name="message" id="facetConfirm">
+    	Confirma el pago del total del a cuota ($ #{pagoBean.cuota.saldo})
+    </f:facet>
+      <p:outputPanel id="confirmPagoPanel">
+        <h:form id="confirmPagoForm">
+        Fecha Pago
+        <p:calendar value="#{cuotaBean.fechaPagoTotalCuota}"/>
+          <p:commandButton id="confirmPagoYesButton" value="#{messages.label_yes}" action="#{cuotaBean.pagarTotalCuota}" update=":dataForm:data :growlForm:growl" oncomplete="confirmPagoDialog.hide()" />
+          <p:commandButton id="confirmPagoNoButton" value="#{messages.label_no}" onclick="confirmPagoDialog.hide()" type="button" />
+        </h:form>
+      </p:outputPanel>
+    </p:confirmDialog>
+
+    <p:dialog id="createDialog" header="#{messages.label_create} Pago" modal="true" widgetVar="createDialog" dynamic="true" visible="#{pagoBean.createDialogVisible}" resizable="true" maximizable="true" showEffect="fade" hideEffect="explode">
+      <p:ajax event="close" update=":dataForm:data" listener="#{pagoBean.handleDialogClose}" />
+      <p:outputPanel id="createPanel">
+        <h:form id="createForm" enctype="multipart/form-data">
+          <h:panelGrid id="createPanelGrid" columns="3" binding="#{pagoBean.createPanelGrid}" styleClass="dialog" columnClasses="col1,col2,col3" />
+          <p:commandButton id="createSaveButton" value="#{messages.label_save}" action="#{pagoBean.persist}" update=":dataForm:data createPanelGrid :growlForm:growl" />
+          <p:commandButton id="createCloseButton" value="#{messages.label_close}" onclick="createDialog.hide()" type="button" />
+        </h:form>
+      </p:outputPanel>
+    </p:dialog>
+
+    
+  </ui:define>
+</ui:composition>
+</html>

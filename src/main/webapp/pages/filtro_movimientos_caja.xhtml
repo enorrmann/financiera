@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jstl/core"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+<f:view>
+<p:panel id="filtroControles" toggleable="true" toggleSpeed="250">
+<f:facet name="header">Filtrar la lista</f:facet>
+
+<h:panelGrid columns="5">
+
+Movimientos de la fecha
+<p:calendar value="#{movimientoCajaBean.filtroMovimientos.fechaHasta}"/>
+
+Caja
+<p:selectOneMenu value="#{movimientoCajaBean.filtroMovimientos.idEmpresa}">  
+	<f:selectItems value="#{creditoBean.filtroCajaItems}"/>
+</p:selectOneMenu> 
+
+<p:commandButton action="#{movimientoCajaBean.filtrarLista}" value="Buscar" ajax="false"/>
+</h:panelGrid>
+</p:panel>
+</f:view>
+
+</html>

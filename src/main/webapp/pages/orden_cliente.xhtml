@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jstl/core"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../templates/layout.xhtml">
+  <ui:define name="content">
+    <h:form prependId="false" id="growlForm">
+      <p:growl id="growl" showDetail="false" />
+    </h:form>
+    
+    <h:form prependId="false" id="dataForm">
+      <p:panel id="data" toggleable="true" toggleSpeed="250">
+        <f:facet name="header">
+          <h:outputText value="#{clienteBean.name}" />
+        </f:facet>
+        <ui:include src="filtro_clientes.xhtml"/>
+        <h:outputFormat id="noRecordsFound" value="#{messages.label_no_records_found}" rendered="#{!clienteBean.dataVisible}">
+          <f:param value="Clientes" />
+        </h:outputFormat>
+    	<script>
+    	var queryString = "";
+    $(function() {
+        $( "#list tbody" ).sortable({
+            placeholder: "ui-state-highlight",
+            stop: function(event, ui) {
+            	queryString = "";
+            	$( "#list :input:hidden").each(function(index,value) {
+            		queryString +=$(this).val()+",";
+            	});
+            	$("#idList" ).val(queryString);
+            }
+        });
+        $( "#list tbody" ).disableSelection();
+    });
+    function sendOrderedData(){
+    	
+    	$.ajax({
+    		  url: "/CommonServlet",
+    		  data: {idList:queryString}
+    		});
+    	
+    }
+    </script>
+    <input type="hidden" name="idList" id="idList"/>
+        <p:dataTable
+        id="list" value="#{clienteBean.allClientes}" var="cliente" rendered="#{clienteBean.dataVisible}" resizableColumns="false" paginator="false" currentPageReportTemplate=" {currentPage} de {totalPages}" paginatorTemplate=" {CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+		<f:facet name="header">
+        <p:commandButton
+			id="orderButton"
+			ajax="false"
+			rendered="#{clienteBean.dataVisible}"
+			action="#{clienteBean.confirmarOrden}"
+			value="Confirmar orden">
+			</p:commandButton>
+			<p:commandButton value="Imprimir" ajax="false" icon="ui-icon-print">
+				 <p:dataExporter type="pdf" target="list" fileName="orden_cobro" excludeColumns="0,1"/>
+			</p:commandButton>
+		
+		</f:facet>        
+		<p:column style="width:1em;">
+            <h:inputHidden value="#{cliente.id}" />
+		</p:column>
+		<p:column>
+            <f:facet name="header">
+              <h:outputText value="Orden" />
+            </f:facet>
+            <h:outputText value="#{cliente.ordenCobranza}" />
+		</p:column>
+		<p:column>
+            <f:facet name="header">
+              <h:outputText value="Nombre Completo" />
+            </f:facet>
+            <h:outputText value="#{cliente.apellidos}, #{cliente.nombres}" />
+		</p:column>
+		<p:column>
+            <f:facet name="header">
+              <h:outputText value="Dias" />
+            </f:facet>
+            <h:outputText value="#{cliente.diasCobroUltimoCredito}" />
+		</p:column>
+		<p:column>
+            <f:facet name="header">
+              <h:outputText value="Domicilio Comercial" />
+            </f:facet>
+            <h:outputText value="#{cliente.domicilioComercial}" />
+		</p:column>
+		<p:column style="display:none;">
+            <f:facet name="header">
+              <h:outputText value="F" />
+            </f:facet>
+            <h:outputText value="                   " />
+		</p:column>
+		<p:column style="display:none;">
+            <f:facet name="header">
+              <h:outputText value="F" />
+            </f:facet>
+            <h:outputText value="                   " />
+		</p:column>
+		<p:column style="display:none;">
+            <f:facet name="header">
+              <h:outputText value="F" />
+            </f:facet>
+            <h:outputText value="                   " />
+		</p:column>
+
+        </p:dataTable>
+			
+      </p:panel>
+    </h:form>
+
+  </ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+<entry key="intimacion">
+<![CDATA[
+
+<html>
+	<head>
+		<title></title>
+	</head>
+	<body>
+		<p style="text-align: right;">
+			Concordia, _FECHA_</p>
+		<p>
+			Se&ntilde;or/a: _NOMBRE_COMPLETO_<br />
+			Domicilio: _DOMICILIO_<br />
+			PRESENTE</p>
+		<p>
+			Me dirijo a Ud. a fin de informarle que se encuentran deudas a su nombre por cr&eacute;ditos personales pendientes de pago, que habiendo vencido ampliamente el plazo de cumplimiento, INTIMO a Ud. por &Uacute;NICA VEZ a cancelar o refinanciar la deuda existente en el plazo perentorio de 48 hs. de recibida la presente, debiendo para ello ponerse en contacto a los Tel: 0345-154015592 / 0345-154015358 o dirigirse a la oficina en calle Coldaroli 175 de 16:30 a 20:30 hs.-<br />
+			<br />
+			Le recuerdo que en caso de continuar con su negativa en el cumplimiento de pago, el cobro del cr&eacute;dito ser&aacute; derivado a gesti&oacute;n judicial, lo que comprender&aacute; mayores gastos derivados de las acciones judiciales a iniciar, los que estar&aacute;n a su cargo.-<br />
+			<br />
+			Saludo a Ud. muy atentamente.-<br />
+			CASH Servicios Financieros</p>
+	</body>
+</html>
+]]>
+</entry>
+
+<entry key="invitacion">
+<![CDATA[
+<html>
+	<head>
+		<title></title>
+	</head>
+	<body>
+		<p style="text-align: right;">
+			Concordia, _FECHA_</p>
+		<p>
+			Se&ntilde;or/a: _NOMBRE_COMPLETO_<br />
+			Domicilio: _DOMICILIO_<br />
+			PRESENTE</p>
+		<p>
+			El motivo de la presente es invitarlo se acerque a nuestras oficinas en calle Coldaroli N&deg;175 de esta ciudad a los fines de poder arribar a un acuerdo atento a que seg&uacute;n nuestro sistema Ud. se encuentra atrasado con el cumplimiento de sus obligaciones.<br />
+			<br />
+			Esperamos su pronto contacto con nosotros una vez recibida la presente y de esta manera lograr una refinanciaci&oacute;n de los intereses devengados por la omisi&oacute;n de pago.<br />
+			<br />
+			Desde ya muchas gracias por su atenci&oacute;n.<br />
+			<br />
+			Saludo a Ud. muy atentamente.-<br />
+			CASH Servicios Financieros</p>
+	</body>
+</html>
+
+]]>
+</entry>
+</properties>

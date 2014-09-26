@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jstl/core"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../templates/layout.xhtml">
+  <ui:define name="content">
+    <h:form prependId="false" id="growlForm">
+      <p:growl id="growl" showDetail="false" />
+    </h:form>
+    <h:form prependId="false" id="dataForm">
+      <p:panel id="data" toggleable="true" toggleSpeed="250">
+        <f:facet name="header">
+          <h:outputText value="Movimientos de caja" />
+        </f:facet>
+        <ui:include src="filtro_movimientos_caja.xhtml"/>
+        <h:outputFormat id="noRecordsFound" value="#{messages.label_no_records_found}" rendered="#{!movimientoCajaBean.dataVisible}">
+          <f:param value="Movimientos" />
+        </h:outputFormat>
+        <p:dataTable 
+        paginatorPosition="bottom"
+        id="list" value="#{movimientoCajaBean.allMovimientoCajas}" var="movimientoCaja" rendered="#{movimientoCajaBean.dataVisible}" resizableColumns="false" paginator="true" currentPageReportTemplate=" {currentPage} de {totalPages}" paginatorTemplate=" {CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rows="15">
+		
+		<f:facet name="header">
+			<p:commandButton value="Imprimir" ajax="false" icon="ui-icon-print">
+				 <p:dataExporter type="pdf" target="list" fileName="movimientos" excludeColumns="0,5"/>
+			</p:commandButton>
+		</f:facet>
+
+		<p:column>
+			<h:graphicImage library="images" name="red_arrow.png" rendered="#{movimientoCaja.tipoMovimientoCaja.negativo}"/>
+			<h:graphicImage library="images" name="green_arrow.png" rendered="#{movimientoCaja.tipoMovimientoCaja.positivo}"/>
+		</p:column>
+		<p:column>
+			<f:facet name="header">Fecha</f:facet>
+			<h:outputText value="#{movimientoCaja.fecha}">
+				<f:convertDateTime pattern="dd/MM/yyyy" />
+			</h:outputText>
+		</p:column>
+		<p:column>
+			<f:facet name="header">Concepto</f:facet>
+			<h:outputText value="#{movimientoCaja.concepto}"/>
+		</p:column>
+		<p:column>
+			<f:facet name="header">Importe</f:facet>
+			<h:outputText value="#{movimientoCaja.importe}"/>
+			<f:facet name="footer"><h:outputText value="#{movimientoCajaBean.total}"/></f:facet>
+		</p:column>
+
+		<p:column>
+			<f:facet name="header">Tipo</f:facet>
+			<h:outputText value="#{movimientoCaja.tipoMovimientoCaja.tipoMovimiento}"/>
+		</p:column>
+
+          <p:column styleClass="action-column">
+            <f:facet name="header">
+              <h:outputText value="Acciones" />
+            </f:facet>
+            <p:commandButton id="viewButton" icon="ui-icon-zoomin" update=":viewForm" oncomplete="viewDialog.show()" title="#{messages.label_view}">
+              <f:setPropertyActionListener value="#{movimientoCaja}" target="#{movimientoCajaBean.movimientoCaja}" />
+            </p:commandButton>
+            <p:tooltip for="viewButton" value="#{messages.label_view}" showEffect="fade" hideEffect="fade" />
+            <p:commandButton
+            	rendered="#{movimientoCaja.concepto!='Cobros del dia'}"
+            	id="editButton" icon="ui-icon-pencil" update=":editForm:editPanelGrid" action="#{movimientoCajaBean.onEdit}" oncomplete="editDialog.show()" title="#{messages.label_edit}">
+              <f:setPropertyActionListener value="#{movimientoCaja}" target="#{movimientoCajaBean.movimientoCaja}" />
+            </p:commandButton>
+            <p:tooltip for="editButton" value="#{messages.label_edit}" showEffect="fade" hideEffect="fade" />
+            <p:commandButton
+            rendered="#{movimientoCaja.concepto!='Cobros del dia'}"
+             id="deleteButton" icon="ui-icon-trash" oncomplete="deleteDialog.show()" title="#{messages.label_delete}">
+              <f:setPropertyActionListener value="#{movimientoCaja}" target="#{movimientoCajaBean.movimientoCaja}" />
+            </p:commandButton>
+            <p:tooltip for="deleteButton" value="#{messages.label_delete}" showEffect="fade" hideEffect="fade" />
+          </p:column>
+        </p:dataTable>
+      </p:panel>
+    </h:form>
+    <p:dialog id="createDialog" header="#{messages.label_create} MovimientoCaja" modal="true" widgetVar="createDialog" dynamic="true" visible="#{movimientoCajaBean.createDialogVisible}" resizable="true" maximizable="true" showEffect="fade" hideEffect="explode">
+      <p:ajax event="close" update=":dataForm:data" listener="#{movimientoCajaBean.handleDialogClose}" />
+      <p:outputPanel id="createPanel">
+        <h:form id="createForm" enctype="multipart/form-data">
+          <h:panelGrid id="createPanelGrid" columns="3" binding="#{movimientoCajaBean.createPanelGrid}" styleClass="dialog" columnClasses="col1,col2,col3" />
+          <p:commandButton id="createSaveButton" value="#{messages.label_save}" action="#{movimientoCajaBean.persist}" update="createPanelGrid :growlForm:growl" />
+          <p:commandButton id="createCloseButton" value="#{messages.label_close}" onclick="createDialog.hide()" type="button" />
+        </h:form>
+      </p:outputPanel>
+    </p:dialog>
+    <p:dialog id="editDialog" header="#{messages.label_edit} MovimientoCaja" modal="true" widgetVar="editDialog" dynamic="true" resizable="true" maximizable="true" showEffect="fade" hideEffect="explode">
+      <p:ajax event="close" update=":dataForm:data" listener="#{movimientoCajaBean.handleDialogClose}" />
+      <p:outputPanel id="editPanel">
+        <h:form id="editForm" enctype="multipart/form-data">
+          <h:panelGrid id="editPanelGrid" columns="3" binding="#{movimientoCajaBean.editPanelGrid}" styleClass="dialog" columnClasses="col1,col2,col3" />
+          <p:commandButton id="editSaveButton" value="#{messages.label_save}" action="#{movimientoCajaBean.persist}" update="editPanelGrid :growlForm:growl" />
+          <p:commandButton id="editCloseButton" value="#{messages.label_close}" onclick="editDialog.hide()" type="button" />
+        </h:form>
+      </p:outputPanel>
+    </p:dialog>
+    <p:dialog id="viewDialog" header="#{messages.label_view} Movimiento" modal="true" widgetVar="viewDialog" dynamic="true" resizable="true" maximizable="true" showEffect="fade" hideEffect="explode">
+      <p:outputPanel id="viewPanel">
+        <h:form id="viewForm" enctype="multipart/form-data">
+          
+          <table>
+          <tr>
+          <td valign="top">
+          
+          <h:panelGrid id="viewPanelGrid" columns="2" styleClass="dialog" columnClasses="col1,col2">
+          Fecha
+          <h:outputText value="#{movimientoCajaBean.movimientoCaja.fecha}">
+			<f:convertDateTime pattern="dd/MM/yyyy" />
+          </h:outputText>
+          Tipo
+          <h:outputText value="#{movimientoCajaBean.movimientoCaja.tipoMovimientoCaja.tipoMovimiento}"/>
+          Concepto
+          <h:outputText value="#{movimientoCajaBean.movimientoCaja.concepto}"/>
+          Importe
+          <h:outputText value="#{movimientoCajaBean.movimientoCaja.importe}"/>
+          </h:panelGrid>
+          </td>
+<td valign="top">          
+          <p:dataTable 
+        	paginatorPosition="bottom"
+        	id="pagoList" value="#{movimientoCajaBean.movimientoCaja.pagoList}" var="pago" rendered="#{not empty movimientoCajaBean.movimientoCaja.pagoList}"
+        	paginator="true" currentPageReportTemplate=" {currentPage} de {totalPages}" paginatorTemplate=" {CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rows="10">
+
+		  <p:column>
+            <f:facet name="header">Cobrador</f:facet>
+            <h:outputText value="#{pago.cobrador.nombreCompleto}"/>
+          </p:column>
+          <p:column>
+            <f:facet name="header">Importe</f:facet>
+            <h:outputText value="#{pago.importe}"/>
+          </p:column>
+        	
+        	</p:dataTable>
+        	</td>
+        	          </tr>
+          </table>
+        	
+        	
+          <p:commandButton id="viewCloseButton" value="#{messages.label_close}" onclick="viewDialog.hide()" type="button" />
+        </h:form>
+      </p:outputPanel>
+    </p:dialog>
+    <p:confirmDialog id="deleteDialog" widgetVar="deleteDialog" message="#{messages.label_delete_record}" showEffect="fade" hideEffect="explode" header="#{messages.label_confirm_deletion}" severity="alarm">
+      <p:outputPanel id="deletePanel">
+        <h:form id="deleteForm">
+          <p:commandButton id="deleteYesButton" value="#{messages.label_yes}" action="#{movimientoCajaBean.delete}" update=":dataForm:data :growlForm:growl" oncomplete="deleteDialog.hide()" />
+          <p:commandButton id="deleteNoButton" value="#{messages.label_no}" onclick="deleteDialog.hide()" type="button" />
+        </h:form>
+      </p:outputPanel>
+    </p:confirmDialog>
+  </ui:define>
+</ui:composition>
+</html>

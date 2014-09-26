@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jstl/core"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+<f:view>
+<p:panel header="Observaciones">
+<p:inputTextarea autoResize="true"  cols="60" value="#{clienteBean.cliente.observaciones}"/>
+</p:panel>
+<p:panel header="Créditos">
+<p:dataTable value="#{clienteBean.cliente.creditos}" var="credito"
+emptyMessage="No registra creditos">
+          <p:column>
+            <f:facet name="header">
+              <h:outputText value="Solicitado el" />
+            </f:facet>
+          	<h:outputText value="#{credito.fechaSolicitud}">
+				<f:convertDateTime pattern="dd/MM/yyyy" />
+          	</h:outputText>
+          </p:column>
+          <p:column>
+            <f:facet name="header">
+              <h:outputText value="Tipo" />
+            </f:facet>
+          	<h:outputText value="#{credito.tipoCredito.tipo}"/>
+          </p:column>
+          <p:column>
+            <f:facet name="header">
+              <h:outputText value="Monto" />
+            </f:facet>
+          	<h:outputText value="#{credito.montoSolicitado}"/>
+          </p:column>
+          <p:column>
+            <f:facet name="header">
+              <h:outputText value="Cuotas" />
+            </f:facet>
+          	<h:outputText value="#{credito.cantidadCuotas}"/>
+          </p:column>
+
+          <p:column>
+            <f:facet name="header">
+              <h:outputText value="Pagas" />
+            </f:facet>
+          	<h:outputText value="#{credito.resumenCredito.cantPagadas}"/>
+          </p:column>
+          <p:column>
+            <f:facet name="header">
+              <h:outputText value="Impagas" />
+            </f:facet>
+          	<h:outputText value="#{credito.resumenCredito.cantImpagas}"/>
+          </p:column>
+          <p:column>
+            <f:facet name="header">
+              <h:outputText value="Vencidas" />
+            </f:facet>
+          	<h:outputText value="#{credito.resumenCredito.cantVencidas}"/>
+          </p:column>
+</p:dataTable>
+</p:panel>
+</f:view>
+
+</html>

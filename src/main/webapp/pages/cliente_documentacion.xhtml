@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jstl/core"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+<f:view>
+<p:panel header="Documentacion presentada">
+ 
+<p:selectBooleanCheckbox value="#{clienteBean.cliente.presentoDoc1}" itemLabel="Recibo de sueldo"/>
+<br/>
+<p:selectBooleanCheckbox value="#{clienteBean.cliente.presentoDoc2}" itemLabel="Factura de Servicio"/>
+<br/>
+<p:selectBooleanCheckbox value="#{clienteBean.cliente.presentoDoc3}" itemLabel="Libre deuda"/>
+<br/>
+<p:selectBooleanCheckbox value="#{clienteBean.cliente.presentoDoc4}" itemLabel="Contrato mutuo"/>
+<br/>
+<p:selectBooleanCheckbox value="#{clienteBean.cliente.presentoDoc5}" itemLabel="D.N.I."/>
+<br/>
+<p:selectBooleanCheckbox value="#{clienteBean.cliente.presentoDoc6}" itemLabel="Habilitacion"/>
+<br/>
+<p:selectBooleanCheckbox value="#{clienteBean.cliente.presentoDoc7}" itemLabel="Mal Pagador"/>
+
+</p:panel>
+<p:panel header="Observaciones">
+<p:inputTextarea autoResize="true"  cols="30" value="#{clienteBean.cliente.observaciones}"/> 
+</p:panel>
+</f:view>
+</html>

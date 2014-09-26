@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+		<p:commandButton update="dtCuotas" value="Calcular cuotas" action="#{creditoBean.credito.generarCuotas}"/>
+		<p:dataTable
+			id="dtCuotas"
+			var="cuota"
+			value="#{creditoBean.cuotas}"
+			scrollable="true" scrollHeight="150"
+			emptyMessage="No hay datos">  
+			<p:column headerText="Numero">  
+				<h:outputText value="#{cuota.numero}" />  
+			</p:column>  
+			<p:column headerText="Fecha de vencimiento" >  
+				<h:outputText value="#{cuota.fechaVencimiento}">
+					<f:convertDateTime pattern="dd/MM/yyyy" />
+				</h:outputText>  
+			</p:column>  
+			<p:column headerText="Importe">
+				<h:outputText value="#{cuota.importe}" />  
+			</p:column>  
+		</p:dataTable>
+
+</ui:composition>
+</html>

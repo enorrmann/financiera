@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jstl/core"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../templates/layout.xhtml">
+  <ui:define name="content">
+    <h:form prependId="false" id="growlForm">
+      <p:growl id="growl" showDetail="false" />
+    </h:form>
+    <h:form prependId="false" id="dataForm">
+      <p:panel id="data" toggleable="true" toggleSpeed="250">
+        <f:facet name="header">
+          <h:outputText value="#{clienteBean.name}" /> 
+        </f:facet>
+        <ui:include src="filtro_clientes.xhtml"/>
+        <h:outputFormat id="noRecordsFound" value="#{messages.label_no_records_found}" rendered="#{!clienteBean.dataVisible}">
+          <f:param value="Clientes" />
+        </h:outputFormat>
+
+
+        <p:dataTable paginatorPosition="bottom"
+        filterEvent="enter"
+        id="list" value="#{clienteBean.allClientes}" var="cliente" rendered="#{clienteBean.dataVisible}" resizableColumns="false" paginator="true" currentPageReportTemplate=" {currentPage} de {totalPages}" paginatorTemplate=" {CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rows="15">
+        <f:facet name="header">
+        <table>
+        <tr>
+        <td align="left">
+	        <h:outputText value="Importes calculados al "/>
+	        <h:outputText value="#{clienteBean.filtroCliente.fechaHasta}">
+	        	<f:convertDateTime pattern="dd/MM/yyyy" />
+	        </h:outputText>
+	        </td>
+	        <td align="right">
+			<p:commandButton value="Imprimir" ajax="false" icon="ui-icon-print">
+				 <p:dataExporter type="pdf" target="list" fileName="clientes" excludeColumns="4,5"/>
+			</p:commandButton>
+			</td>
+		</tr>
+		</table>
+		</f:facet>
+		<p:column filterBy="#{cliente.apellidos}" filterMatchMode="contains"> 
+            <f:facet name="header">
+              <h:outputText value="Apellido" />
+            </f:facet>
+            <h:outputText value="#{cliente.apellidos}" />
+		</p:column>
+		<p:column filterBy="#{cliente.nombres}" filterMatchMode="contains">
+            <f:facet name="header">
+              <h:outputText value="Nombres" />
+            </f:facet>
+            <h:outputText value="#{cliente.nombres}" />
+		</p:column>
+		<p:column filterBy="#{cliente.zona.zona}" filterMatchMode="contains">
+            <f:facet name="header">
+              <h:outputText value="Zona" />
+            </f:facet>
+            <h:outputText value="#{cliente.zona.zona}" />
+		</p:column>
+		<p:column>
+            <f:facet name="header">
+              <h:outputText value="Debe" />
+            </f:facet>
+            <h:outputText value="#{cliente.debe}" />
+		<f:facet name="footer">
+			<h:outputText value="#{clienteBean.totalMora}" />
+		</f:facet>
+		</p:column>
+		<p:column>
+            <f:facet name="header">
+              <h:outputText value="Dias" />
+            </f:facet>
+            <h:outputText value="#{cliente.diasCobroUltimoCredito}" />
+		</p:column>
+
+          <p:column styleClass="action-column">
+            <f:facet name="header">
+              <h:outputText value="Acciones" />
+            </f:facet>
+            <p:commandButton id="viewButton" icon="ui-icon-zoomin" update=":viewForm" oncomplete="viewDialog.show()" title="#{messages.label_view}">
+              <f:setPropertyActionListener value="#{cliente}" target="#{clienteBean.cliente}" />
+            </p:commandButton>
+            <p:tooltip for="viewButton" value="#{messages.label_view}" showEffect="fade" hideEffect="fade" />
+            <p:commandButton id="editButton" icon="ui-icon-pencil" update=":editForm" action="#{clienteBean.onEdit}" oncomplete="editDialog.show()" title="#{messages.label_edit}">
+              <f:setPropertyActionListener value="#{cliente}" target="#{clienteBean.cliente}" />
+            </p:commandButton>
+            <p:tooltip for="editButton" value="#{messages.label_edit}" showEffect="fade" hideEffect="fade" />
+            <p:commandButton 
+            rendered="#{usuarioBean.administrador or usuarioBean.cobrador}"
+            id="deleteButton" icon="ui-icon-trash" oncomplete="deleteDialog.show()" title="#{messages.label_delete}">
+              <f:setPropertyActionListener value="#{cliente}" target="#{clienteBean.cliente}" />
+            </p:commandButton>
+            <p:tooltip for="deleteButton" value="#{messages.label_delete}" showEffect="fade" hideEffect="fade" />
+<br/>          
+            <p:commandButton id="invitaButton"
+            	rendered="#{cliente.debe gt 0}" 
+            	update=":growlForm:growl"
+            	action="#{clienteBean.sendInvitacionAlPago}" icon="ui-icon-mail-closed">
+              <f:setPropertyActionListener value="#{cliente}" target="#{clienteBean.cliente}" />
+            </p:commandButton>
+            <p:tooltip for="invitaButton" value="Enviar mail invitacion al pago" showEffect="fade" hideEffect="fade" />
+            <p:commandButton id="intimaButton"
+            	rendered="#{cliente.debe gt 0}" 
+            	action="#{clienteBean.sendIntimacion}" icon="ui-icon-mail-closed">
+              <f:setPropertyActionListener value="#{cliente}" target="#{clienteBean.cliente}" />
+            </p:commandButton>
+            <p:tooltip for="intimaButton" value="Enviar mail Intimacion" showEffect="fade" hideEffect="fade" />
+
+<br/>          
+
+            <p:commandButton id="printInvitaButton"
+            	rendered="#{cliente.debe gt 0}" 
+            	update=":growlForm:growl"
+            	action="#{clienteBean.printInvitacionAlPago}" icon="ui-icon-print" ajax="false">
+              <f:setPropertyActionListener value="#{cliente}" target="#{clienteBean.cliente}" />
+            </p:commandButton>
+            <p:tooltip for="printInvitaButton" value="Imprimir invitacion al pago" showEffect="fade" hideEffect="fade" />
+
+            <p:commandButton id="printIntimaButton"
+            	rendered="#{cliente.debe gt 0}" 
+            	update=":growlForm:growl"
+            	action="#{clienteBean.printIntimacion}" icon="ui-icon-print" ajax="false">
+              <f:setPropertyActionListener value="#{cliente}" target="#{clienteBean.cliente}" />
+            </p:commandButton>
+            <p:tooltip for="printIntimaButton" value="Imprimir intimacion" showEffect="fade" hideEffect="fade" />
+
+
+          </p:column>
+        </p:dataTable>
+      </p:panel>
+    </h:form>
+    <p:dialog id="createDialog" header="#{messages.label_create} Cliente" modal="true" widgetVar="createDialog" dynamic="true" visible="#{clienteBean.createDialogVisible}" resizable="true" maximizable="true" showEffect="fade" hideEffect="explode">
+      <p:ajax event="close" update=":dataForm:data" listener="#{clienteBean.handleDialogClose}" />
+      <p:outputPanel id="createPanel">
+        <h:form id="createForm" enctype="multipart/form-data">
+          <table>
+          <tr>
+          <td valign="top">
+          	<h:panelGrid id="createPanelGrid" columns="3" binding="#{clienteBean.createPanelGrid}" styleClass="dialog" columnClasses="col1,col2,col3"/>
+          </td>
+          <td valign="top">
+          	<ui:include src="cliente_documentacion.xhtml"/>
+          </td>
+          </tr>
+          </table>
+          <p:commandButton id="createSaveButton" value="#{messages.label_save}" action="#{clienteBean.persist}" update="createPanelGrid :growlForm:growl" />
+          <p:commandButton id="createCloseButton" value="#{messages.label_close}" onclick="createDialog.hide()" type="button" />
+        </h:form>
+      </p:outputPanel>
+    </p:dialog>
+    <p:dialog id="editDialog" header="#{messages.label_edit} Cliente" modal="true" widgetVar="editDialog" dynamic="true" resizable="true" maximizable="true" showEffect="fade" hideEffect="explode">
+      <p:ajax event="close" update=":dataForm:data" listener="#{clienteBean.handleDialogClose}" />
+      <p:outputPanel id="editPanel">
+        <h:form id="editForm" enctype="multipart/form-data">
+
+          <table>
+          <tr>
+          <td valign="top">
+          <h:panelGrid id="editPanelGrid" columns="3" binding="#{clienteBean.editPanelGrid}" styleClass="dialog" columnClasses="col1,col2,col3" />
+          </td>
+          <td valign="top">
+          	<ui:include src="cliente_documentacion.xhtml"/>
+          </td>
+          </tr>
+          </table>
+
+
+          <p:commandButton id="editSaveButton" value="#{messages.label_save}" action="#{clienteBean.persist}" update="editPanelGrid :growlForm:growl" />
+          <p:commandButton id="editCloseButton" value="#{messages.label_close}" onclick="editDialog.hide()" type="button" />
+        </h:form>
+      </p:outputPanel>
+    </p:dialog>
+    <p:dialog id="viewDialog" header="#{messages.label_view} Cliente" modal="true" closable="false" widgetVar="viewDialog" dynamic="true" resizable="true" maximizable="false" showEffect="fade" hideEffect="explode">
+      <p:outputPanel id="viewPanel">
+        <h:form id="viewForm" enctype="multipart/form-data">
+          <table>
+          <tr>
+          <td valign="top">
+          <p:panel header="Datos Personales">
+          	<h:panelGrid id="viewPanelGrid" columns="2" binding="#{clienteBean.viewPanelGrid}" styleClass="dialog" columnClasses="col1,col2" />
+          </p:panel>
+          </td>
+          <td valign="top">
+          	<ui:include src="cliente_creditos.xhtml"/>
+          </td>
+          </tr>
+          </table>
+          <p:commandButton id="viewCloseButton" value="#{messages.label_close}" action="#{clienteBean.actualizarObservaciones}"/>
+        </h:form>
+      </p:outputPanel>
+    </p:dialog>
+    <p:confirmDialog id="deleteDialog" widgetVar="deleteDialog" message="#{messages.label_delete_record}" showEffect="fade" hideEffect="explode" header="#{messages.label_confirm_deletion}" severity="alarm">
+      <p:outputPanel id="deletePanel">
+        <h:form id="deleteForm">
+          <p:commandButton id="deleteYesButton" value="#{messages.label_yes}" action="#{clienteBean.delete}" update=":dataForm:data :growlForm:growl" oncomplete="deleteDialog.hide()" />
+          <p:commandButton id="deleteNoButton" value="#{messages.label_no}" onclick="deleteDialog.hide()" type="button" />
+        </h:form>
+      </p:outputPanel>
+    </p:confirmDialog>
+  </ui:define>
+</ui:composition>
+</html>

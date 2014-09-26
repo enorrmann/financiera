@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jstl/core"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../templates/layout.xhtml">
+  <ui:define name="content">
+  <script>
+  function calcularMontoTotal(){
+      var total = $("#createForm\\:montoSolicitadoCreateInput").val();
+      var cuota = $("#createForm\\:montoDeCuotaCreateInput").val();
+      var cantidad = $("#createForm\\:cantidadCuotasCreateInput_input").val();
+      var varTasa = $("#createForm\\:tasaCreateInput_input").val();
+
+	  $.ajax({
+          type:'GET',
+          url: '/CalculoServlet',
+          data: {metodo:'calcularMontoTotal',montoTotal:total, cantidadCuotas:cantidad, montoCuota:cuota, tasa:varTasa},
+          dataType: 'text',
+          success:function(data){
+                  console.log("datos "+ data);
+                  $("#createForm\\:montoSolicitadoCreateInput").val(data);
+                  
+          }
+      });
+  }
+  function calcularMontoCuota(){
+	  console.log('calcularMontoCuota!');
+      var total = $("#createForm\\:montoSolicitadoCreateInput").val();
+      var cuota = $("#createForm\\:montoDeCuotaCreateInput").val();
+      var cantidad = $("#createForm\\:cantidadCuotasCreateInput_input").val();
+      var varTasa = $("#createForm\\:tasaCreateInput_input").val();
+
+	  $.ajax({
+          type:'GET',
+          url: '/CalculoServlet',
+          data: {metodo:'calcularMontoCuota',montoTotal:total, cantidadCuotas:cantidad, montoCuota:cuota, tasa:varTasa},
+          dataType: 'text',
+          success:function(data){
+                  console.log("datos "+ data);
+                  $("#createForm\\:montoDeCuotaCreateInput").val(data);
+                  
+          }
+      });
+  }
+  function calcularTasa(){
+	  console.log('calcularTasa!');
+      var total = $("#createForm\\:montoSolicitadoCreateInput").val();
+      var cuota = $("#createForm\\:montoDeCuotaCreateInput").val();
+      var cantidad = $("#createForm\\:cantidadCuotasCreateInput_input").val();
+      var varTasa = $("#createForm\\:tasaCreateInput_input").val();
+
+	  $.ajax({
+          type:'GET',
+          url: '/CalculoServlet',
+          data: {metodo:'calcularTasa',montoTotal:total, cantidadCuotas:cantidad, montoCuota:cuota, tasa:varTasa},
+          dataType: 'text',
+          success:function(data){
+                  console.log("datos "+ data);
+                  $("#createForm\\:tasaCreateInput_input").val(data);
+                  $("#createForm\\:tasaCreateInput_hinput").val(data);
+          }
+      });
+  }
+  function calcularCantidadCuotas(){
+	  console.log('calcularCantidadCuotas!');
+      var total = $("#createForm\\:montoSolicitadoCreateInput").val();
+      var cuota = $("#createForm\\:montoDeCuotaCreateInput").val();
+      var cantidad = $("#createForm\\:cantidadCuotasCreateInput_input").val();
+      var varTasa = $("#createForm\\:tasaCreateInput_input").val();
+
+	  $.ajax({
+          type:'GET',
+          url: '/CalculoServlet',
+          data: {metodo:'calcularCantidadCuotas',montoTotal:total, cantidadCuotas:cantidad, montoCuota:cuota, tasa:varTasa},
+          dataType: 'text',
+          success:function(data){
+                  console.log("datos "+ data);
+                  $("#createForm\\:cantidadCuotasCreateInput_input").val(data);
+                  
+          }
+      });
+  }
+  </script>
+    <h:form prependId="false" id="growlForm">
+      <p:growl id="growl" showDetail="false" />
+    </h:form>
+    <h:form prependId="false" id="dataForm">
+      <p:panel id="data" toggleable="true" toggleSpeed="250">
+        <f:facet name="header">
+          Créditos otorgados
+        </f:facet>
+        <ui:include src="filtro_creditos.xhtml"/>
+        <h:outputFormat id="noRecordsFound" value="#{messages.label_no_records_found}" rendered="#{!creditoBean.dataVisible}">
+          <f:param value="créditos" />
+        </h:outputFormat>
+        
+        <p:dataTable
+        	paginatorPosition="bottom"
+        	id="list"
+        	value="#{creditoBean.allCreditoes}"
+        	var="credito"
+        	filterEvent="enter"
+			rendered="#{creditoBean.dataVisible}"  resizableColumns="false" paginator="true" currentPageReportTemplate=" {currentPage} de {totalPages}" paginatorTemplate=" {CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rows="15">
+			
+        <f:facet name="header">
+			<p:commandButton value="Imprimir" ajax="false" icon="ui-icon-print">
+				 <p:dataExporter type="pdf" target="list" fileName="creditos" excludeColumns="11"/>
+			</p:commandButton>
+		</f:facet>			
+          <p:column>
+            <f:facet name="header">
+              <h:outputText value="Cliente" />
+            </f:facet>
+          	<h:outputText value="#{credito.cliente.nombreLargo}" />
+          </p:column>
+          <p:column>
+            <f:facet name="header">
+              <h:outputText value="Caja" />
+            </f:facet>
+          	<h:outputText value="#{credito.idEmpresa}" />
+          </p:column>
+          <p:column>
+            <f:facet name="header">
+              <h:outputText value="Solicitado el" />
+            </f:facet>
+          	<h:outputText value="#{credito.fechaSolicitud}">
+				<f:convertDateTime pattern="dd/MM/yyyy" />
+          	</h:outputText>
+          </p:column>
+          <p:column>
+            <f:facet name="header">
+              <h:outputText value="Tipo" />
+            </f:facet>
+          	<h:outputText value="#{credito.tipoCredito.tipo}"/>
+          </p:column>
+          <p:column>
+            <f:facet name="header">
+              <h:outputText value="Solicitado" />
+            </f:facet>
+          	<h:outputText value="#{credito.montoSolicitado}"/>
+			<f:facet name="footer">
+				<h:outputText value="#{creditoBean.totalCreditos}" rendered="#{usuarioBean.administrador or usuarioBean.cobrador}"/>
+			</f:facet>
+          </p:column>
+          <p:column>
+            <f:facet name="header">
+              <h:outputText value="Interes" />
+            </f:facet>
+          	<h:outputText value="#{credito.interes}"/>
+          	(<h:outputText value="#{credito.tasa}"/>%)
+			<f:facet name="footer">
+				<h:outputText value="#{creditoBean.totalIntereses}" rendered="#{usuarioBean.administrador or usuarioBean.cobrador}"/>
+			</f:facet>
+          </p:column>
+          <p:column>
+            <f:facet name="header">
+              <h:outputText value="Total" />
+            </f:facet>
+          	<h:outputText value="#{credito.montoTotal}"/>
+			<f:facet name="footer">
+				<h:outputText value="#{creditoBean.totalTotal}" rendered="#{usuarioBean.administrador or usuarioBean.cobrador}"/>
+			</f:facet>
+          </p:column>
+          <p:column>
+            <f:facet name="header">
+              <h:outputText value="Cuotas" />
+            </f:facet>
+          	<h:outputText value="#{credito.cantidadCuotas}"/>
+          </p:column>
+
+          <p:column rendered="false">
+            <f:facet name="header">
+              <h:outputText value="Pagas" />
+            </f:facet>
+          	<h:outputText value="#{credito.resumenCredito.cantPagadas}"/>
+          </p:column>
+          <p:column>
+            <f:facet name="header">
+              <h:outputText value="Impagas" />
+            </f:facet>
+          	<h:outputText value="#{credito.resumenCredito.totalCuotasImpagas}"/>
+          	<h:outputText value=" (#{credito.resumenCredito.cantImpagas})"/>
+			<f:facet name="footer">
+				<h:outputText value="#{creditoBean.totalImpagas}" rendered="#{usuarioBean.administrador or usuarioBean.cobrador}"/>
+			</f:facet>
+          </p:column>
+          <p:column rendered="false">
+            <f:facet name="header">
+              <h:outputText value="Vencidas" />
+            </f:facet>
+          	<h:outputText value="#{credito.resumenCredito.cantVencidas}"/>
+          </p:column>
+
+
+          <p:column styleClass="action-column">
+            <f:facet name="header">
+              <h:outputText value="Acciones" />
+            </f:facet>
+            <p:commandButton id="viewButton" icon="ui-icon-zoomin" update=":viewForm" action="#{creditoBean.onView}" oncomplete="viewDialog.show()" title="#{messages.label_view}">
+              <f:setPropertyActionListener value="#{credito}" target="#{creditoBean.credito}" />
+            </p:commandButton>
+            <p:tooltip for="viewButton" value="#{messages.label_view}" showEffect="fade" hideEffect="fade" />
+            
+            <p:commandButton
+            rendered="#{credito.diario}"
+            id="editButton" icon="ui-icon-pencil" update=":editForm" action="#{creditoBean.onEdit}" oncomplete="editDialog.show()" title="#{messages.label_edit}">
+              <f:setPropertyActionListener value="#{credito}" target="#{creditoBean.credito}" />
+            </p:commandButton>
+            
+            <p:commandButton
+            rendered="#{usuarioBean.administrador or usuarioBean.cobrador}" 
+            id="deleteButton" icon="ui-icon-trash" oncomplete="deleteDialog.show()" title="#{messages.label_delete}">
+              <f:setPropertyActionListener value="#{credito}" target="#{creditoBean.credito}" />
+            </p:commandButton>
+            <p:tooltip for="deleteButton" value="#{messages.label_delete}" showEffect="fade" hideEffect="fade" />
+            
+            <p:commandButton id="printButton" action="#{creditoBean.printReport}" icon="ui-icon-print" ajax="false" title="Imprimir">
+            <f:setPropertyActionListener value="#{credito}" target="#{creditoBean.credito}" />
+            </p:commandButton>
+            <p:tooltip for="printButton" value="Imprimir" showEffect="fade" hideEffect="fade" />
+
+          </p:column>
+        </p:dataTable>
+
+      </p:panel>
+      
+    </h:form>
+    <p:dialog id="createDialog" header="Otorgar Credito" modal="true" widgetVar="createDialog" dynamic="true" visible="#{creditoBean.createDialogVisible}" resizable="true" maximizable="true" showEffect="fade" hideEffect="explode">
+      <p:ajax event="close" update=":dataForm:data" listener="#{creditoBean.handleDialogClose}" />
+      <p:outputPanel id="createPanel">
+        <h:form id="createForm" enctype="multipart/form-data">
+		<h:panelGrid id="createPanelGrid" columns="3" binding="#{creditoBean.createPanelGrid}" styleClass="dialog" columnClasses="col1,col2,col3" />
+          <p:commandButton id="createSaveButton" value="#{messages.label_save}" action="#{creditoBean.persist}" update="createPanelGrid :growlForm:growl" />
+          <p:commandButton id="createCloseButton" value="#{messages.label_close}" onclick="createDialog.hide()" type="button" />
+        </h:form>
+      </p:outputPanel>
+      
+    </p:dialog>
+    <p:dialog id="editDialog" header="#{messages.label_edit} Credito" modal="true" widgetVar="editDialog" dynamic="true" resizable="true" maximizable="true" showEffect="fade" hideEffect="explode">
+      <p:ajax event="close" update=":dataForm:data" listener="#{creditoBean.handleDialogClose}" />
+      <p:outputPanel id="editPanel">
+        <h:form id="editForm" enctype="multipart/form-data">
+          <h:panelGrid id="editPanelGrid" columns="3" binding="#{creditoBean.editPanelGrid}" styleClass="dialog" columnClasses="col1,col2,col3" />
+          <p:commandButton id="editSaveButton" value="#{messages.label_save}" action="#{creditoBean.updateCuotas}" update="editPanelGrid :growlForm:growl" />
+          <p:commandButton id="editCloseButton" value="#{messages.label_close}" onclick="editDialog.hide()" type="button" />
+        </h:form>
+      </p:outputPanel>
+    </p:dialog>
+    <p:dialog id="viewDialog" header="#{messages.label_view} Credito" modal="true" widgetVar="viewDialog" dynamic="true" resizable="true" maximizable="true" showEffect="fade" hideEffect="explode">
+      <p:outputPanel id="viewPanel">
+        <h:form id="viewForm" enctype="multipart/form-data">
+          <h:panelGrid id="viewPanelGrid" columns="2" binding="#{creditoBean.viewPanelGrid}" styleClass="dialog" columnClasses="col1,col2" />
+          <ui:include src="credito_cuotas.xhtml"/>
+          <p:commandButton id="viewCloseButton" value="#{messages.label_close}" onclick="viewDialog.hide()" type="button" />
+        </h:form>
+      </p:outputPanel>
+    </p:dialog>
+    <p:confirmDialog id="deleteDialog" widgetVar="deleteDialog" message="#{messages.label_delete_record}" showEffect="fade" hideEffect="explode" header="#{messages.label_confirm_deletion}" severity="alarm">
+      <p:outputPanel id="deletePanel">
+        <h:form id="deleteForm">
+          <p:commandButton id="deleteYesButton" value="#{messages.label_yes}" action="#{creditoBean.delete}" update=":dataForm:data :growlForm:growl" oncomplete="deleteDialog.hide()" />
+          <p:commandButton id="deleteNoButton" value="#{messages.label_no}" onclick="deleteDialog.hide()" type="button" />
+        </h:form>
+      </p:outputPanel>
+    </p:confirmDialog>
+  </ui:define>
+</ui:composition>
+</html>

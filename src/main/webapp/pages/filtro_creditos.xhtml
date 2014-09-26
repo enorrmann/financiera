@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jstl/core"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+<f:view>
+<p:panel id="filtroCuotas" toggleable="true" toggleSpeed="250">
+<f:facet name="header">Filtrar la lista</f:facet>
+
+Cliente
+<p:autoComplete value="#{creditoBean.filtroCreditoList.entidadCliente}" 
+	completeMethod="#{clienteBean.completeCliente}"
+	minQueryLength="3"
+	scrollHeight="200"
+	size="50"
+	var="cliente" 
+	itemLabel="#{cliente.apellidos} #{cliente.nombres}" 
+	itemValue="#{cliente}" 
+	converter="#{creditoBean.clienteConverter}"/>
+
+<h:panelGrid columns="5">
+
+Caja
+<p:selectOneMenu value="#{creditoBean.filtroCreditoList.idEmpresa}">  
+	<f:selectItem itemValue="1" var="zona" itemLabel="Caja 1"/>
+	<f:selectItem itemValue="2" var="zona" itemLabel="Caja 2"/>
+	<f:selectItem itemValue="3" var="zona" itemLabel="Caja 3"/>
+	<f:selectItem itemValue="4" var="zona" itemLabel="Caja 4"/>
+	<f:selectItem itemValue="5" var="zona" itemLabel="Caja 5"/>
+	<f:selectItem itemValue="6" var="zona" itemLabel="Caja 6"/>
+	<f:selectItem itemValue="7" var="zona" itemLabel="Caja 7"/>
+	<f:selectItem itemValue="8" var="zona" itemLabel="Caja 8"/>
+	<f:selectItem itemValue="9" var="zona" itemLabel="Caja 9"/>
+
+</p:selectOneMenu> 
+<p:commandButton action="#{creditoBean.filtrarLista}" value="Buscar" ajax="false"/>
+</h:panelGrid>
+</p:panel>
+
+</f:view>
+
+</html>

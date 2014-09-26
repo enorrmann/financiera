@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jstl/core"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<f:view contentType="text/html">
+  <h:head>
+    <ui:insert name="header">
+      <ui:include src="templates/header.xhtml" />
+    </ui:insert>
+  </h:head>
+  <h:body>
+  <div id="outer" style="width:100%">  
+  <div id="inner" style="width: 50%;margin: 0px auto;">
+  
+<p:panel style="width:600px;text-align: right;">
+<f:facet name="header">
+Control de acceso
+</f:facet>
+<p style="color: red;">
+${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}
+</p>
+	<form id="loginForm" method="post" action="j_spring_security_check" name="secform">
+			<table style="width: 100%;">
+			<tr>
+			<td>
+			Usuario
+			</td>
+			<td style="text-align: left">
+			<input name="j_username" type="text" style="width: 80px" />
+			</td>
+			</tr>
+			<tr>
+			<td>
+			Contraseña
+			</td>
+			<td style="text-align: left">
+			<input type="password" name="j_password" style="width: 80px" />
+			</td>
+			</tr>
+			</table>
+		<input name="submit" type="submit" value="Ingresar" />
+	</form>
+
+</p:panel>
+
+
+</div>
+</div>
+</h:body>
+</f:view>
+
+</html>

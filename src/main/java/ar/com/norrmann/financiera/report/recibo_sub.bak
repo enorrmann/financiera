@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="recibo_sub"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Portrait"
+		 pageWidth="595"
+		 pageHeight="842"
+		 columnWidth="535"
+		 columnSpacing="0"
+		 leftMargin="30"
+		 rightMargin="30"
+		 topMargin="20"
+		 bottomMargin="20"
+		 whenNoDataType="NoPages"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+
+	<parameter name="cliente" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="fecha" isForPrompting="false" class="java.util.Date"/>
+	<parameter name="monto" isForPrompting="false" class="java.math.BigDecimal"/>
+	<parameter name="letras" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="numeroCuota" isForPrompting="false" class="java.lang.Integer"/>
+	<parameter name="cobrador" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="vencimientoCuota" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="domicilio" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="tipoCredito" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="numero" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["0001 - 00000001"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="firmante" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="SUBREPORT_DIR" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["C:\\Documents and Settings\\enorrmann\\Mis documentos\\My Dropbox\\PROYECTOS\\financiera\\src\\main\\java\\ar\\com\\norrmann\\financiera\\report\\"]]></defaultValueExpression>
+	</parameter>
+
+		<background>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</background>
+		<title>
+			<band height="68"  isSplitAllowed="true" >
+				<staticText>
+					<reportElement
+						x="2"
+						y="12"
+						width="528"
+						height="39"
+						key="staticText-1"/>
+					<box></box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="18"/>
+					</textElement>
+				<text><![CDATA[RECIBO]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="314"
+						y="20"
+						width="208"
+						height="23"
+						key="textField"/>
+					<box></box>
+					<textElement verticalAlignment="Bottom">
+						<font size="14"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{numero}]]></textFieldExpression>
+				</textField>
+			</band>
+		</title>
+		<pageHeader>
+			<band height="15"  isSplitAllowed="true" >
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="2"  isSplitAllowed="true" >
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="237"  isSplitAllowed="true" >
+				<staticText>
+					<reportElement
+						x="329"
+						y="6"
+						width="57"
+						height="16"
+						key="staticText-7"/>
+					<box></box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Fecha :]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="393"
+						y="6"
+						width="136"
+						height="16"
+						key="textField-8"/>
+					<box></box>
+					<textElement verticalAlignment="Middle">
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$P{fecha}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="130"
+						y="103"
+						width="401"
+						height="23"
+						key="textField-10"/>
+					<box></box>
+					<textElement>
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["pago de la cuota número "+$P{numeroCuota}+ " con vencimiento el dia "+$P{vencimientoCuota}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="130"
+						y="30"
+						width="401"
+						height="16"
+						key="textField"/>
+					<box></box>
+					<textElement>
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{cliente}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="130"
+						y="54"
+						width="401"
+						height="16"
+						key="textField"/>
+					<box></box>
+					<textElement>
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{domicilio}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="131"
+						y="78"
+						width="401"
+						height="16"
+						key="textField"/>
+					<box></box>
+					<textElement>
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$P{monto}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="11"
+						y="134"
+						width="111"
+						height="17"
+						key="staticText-9"/>
+					<box leftPadding="2"></box>
+					<textElement>
+						<font pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Observaciones: ]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="130"
+						y="158"
+						width="401"
+						height="16"
+						key="textField"/>
+					<box></box>
+					<textElement>
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{tipoCredito}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="11"
+						y="31"
+						width="112"
+						height="16"
+						key="staticText-10"/>
+					<box leftPadding="2"></box>
+					<textElement>
+						<font pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Nombre y apellido :]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="10"
+						y="54"
+						width="112"
+						height="16"
+						key="staticText-11"/>
+					<box leftPadding="2"></box>
+					<textElement>
+						<font pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Direccion :]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="10"
+						y="79"
+						width="112"
+						height="16"
+						key="staticText-13"/>
+					<box leftPadding="2"></box>
+					<textElement>
+						<font pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Importe :]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="10"
+						y="103"
+						width="112"
+						height="16"
+						key="staticText-14"/>
+					<box leftPadding="2"></box>
+					<textElement>
+						<font pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Concepto:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="11"
+						y="158"
+						width="112"
+						height="16"
+						key="staticText-15"/>
+					<box leftPadding="2"></box>
+					<textElement>
+						<font pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Tipo de crédito :]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="130"
+						y="134"
+						width="401"
+						height="17"
+						key="staticText-16"/>
+					<box></box>
+					<textElement>
+						<font/>
+					</textElement>
+				<text><![CDATA[Pago efectivo]]></text>
+				</staticText>
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="51"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="297"
+						y="22"
+						width="168"
+						height="16"
+						key="textField"/>
+					<box></box>
+					<textElement>
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{firmante}]]></textFieldExpression>
+				</textField>
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="50"  isSplitAllowed="true" >
+			</band>
+		</pageFooter>
+		<lastPageFooter>
+			<band height="50"  isSplitAllowed="true" >
+				<subreport  isUsingCache="true">
+					<reportElement
+						x="242"
+						y="12"
+						width="161"
+						height="23"
+						key="subreport-1"/>
+					<subreportParameter  name="cliente">
+						<subreportParameterExpression><![CDATA[$P{cliente}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="direccion">
+						<subreportParameterExpression><![CDATA[$P{domicilio}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="monto">
+						<subreportParameterExpression><![CDATA[$P{monto}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="fecha">
+						<subreportParameterExpression><![CDATA[$P{fecha}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="letras">
+						<subreportParameterExpression><![CDATA[$P{letras}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="numeroCuota">
+						<subreportParameterExpression><![CDATA[$P{numeroCuota}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="cobrador">
+						<subreportParameterExpression><![CDATA[$P{cobrador}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="vencimientoCuota">
+						<subreportParameterExpression><![CDATA[$P{vencimientoCuota}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="domicilio">
+						<subreportParameterExpression><![CDATA[$P{domicilio}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="tipoCredito">
+						<subreportParameterExpression><![CDATA[$P{tipoCredito}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="numero">
+						<subreportParameterExpression><![CDATA[$P{numero}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="firmante">
+						<subreportParameterExpression><![CDATA[$P{cliente}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression  class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR}+"credito.jrxml"]]></subreportExpression>
+				</subreport>
+			</band>
+		</lastPageFooter>
+		<summary>
+			<band height="50"  isSplitAllowed="true" >
+			</band>
+		</summary>
+</jasperReport>
